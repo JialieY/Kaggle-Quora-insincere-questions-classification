@@ -39,3 +39,4 @@ Classification of questions posted in Quora as "Sincere" and "Insincere" questio
 ## Summary Report
 
 insincere.pdf
+https://github.com/JialieY/Kaggle-Quora-insincere-questions-classification/blob/master/insincere.pdf
