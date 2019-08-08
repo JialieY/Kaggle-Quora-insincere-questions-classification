@@ -35,9 +35,11 @@ Classification of questions posted in Quora as "Sincere" and "Insincere" questio
     Run clean_csv.py first, and then run the file listed above.
 
 5. Best solution
+
     | Model          | Code          |
     | -------------  | ------------- |
     | Glove + Para Embedding in the same NN       | all_in_one.py   |
+    
     This can be submitted to kaggle competition directly.
 
 ## Summary Report
