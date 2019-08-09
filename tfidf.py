@@ -42,4 +42,10 @@ for thresh in np.arange(0.1, 0.501, 0.01):
 
 
 model.save('my_tfidf_model.h5')
-print("done")
+pred_keras_test_y = model.predict([test_X], batch_size=1024, verbose=1)
+pred_test_y = pred_keras_test_y
+pred_test_y = (pred_test_y>0.35).astype(int)
+out_df = pd.DataFrame({"qid":test_df["qid"].values})
+out_df['prediction'] = pred_test_y
+out_df.to_csv("submission.csv", index=False)
+
