@@ -15,6 +15,7 @@ Classification of questions posted in Quora as "Sincere" and "Insincere" questio
     | -------------  | ------------- |
     | Binary Word    | bw.py         |
     | Count Word     | cw.py         |
+    | Statistic + Count Word     | heurastic.py         |
     | TF-IDF         | tfidf.py      |
     | Keras Embedding| em_keras.py   |
     | Glvoe Embedding| em_glove.py   |
