@@ -186,9 +186,8 @@ xg_val.to_csv("xg_val50000.csv", index=False)
 xg_test.to_csv("xg_test50000.csv", index=False)
 
 # Average Vote
-xg_val["pred"] = xg_val.iloc[:,1:].mean()
-xg_test["pred"] = xg_test.iloc[:,1:].mean()
-
+xg_val["pred"] = xg_val.iloc[:,1:8].mean(axis=1)
+xg_test["pred"] = xg_test.iloc[:,1:8].mean(axis=1)
 
 for thresh in np.arange(0.1, 0.501, 0.01):
     thresh = np.round(thresh, 2)
@@ -200,5 +199,3 @@ out_df = pd.DataFrame({"qid":test_df["qid"].values})
 out_df['prediction'] = pred_ave_y
 out_df.to_csv("submission.csv", index=False)
 
-
-# print("done")
