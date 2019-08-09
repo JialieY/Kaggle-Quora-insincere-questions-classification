@@ -53,27 +53,18 @@ punct_mapping = {"‘": "'", "₹": "e", "´": "'", "°": "", "€": "e", "™":
 def clean_special_chars(text, punct, mapping):
     for p in mapping:
         text = text.replace(p, mapping[p])
-
     for p in punct:
         text = text.replace(p, "")
-
     specials = {'\u200b': '', '…': '', '\ufeff': '', 'करना': '','है': ''}
     for s in specials:
         text = text.replace(s, specials[s])
-
     return text
 
 train_X = train_X.apply(lambda x: clean_special_chars(x, punct, punct_mapping))
 test_X = test_X.apply(lambda x: clean_special_chars(x, punct, punct_mapping))
 
-_num = train_X.apply(lambda x: len(x.split()))
-print("longest sentence {}".format(_num.max()))
-print("shortest sentence {}".format(_num.min()))
-
-
 train["question_text"] = train_X
 test["question_text"] = test_X
-
 
 ## split to train and val
 train_df, val_df = train_test_split(train, test_size=0.1, random_state=2019)
@@ -106,11 +97,11 @@ train_y = train_df['target'].values
 val_y = val_df['target'].values
 
 
-## glove embeddings
-EMBEDDING_FILE = '../input/embeddings/glove.840B.300d/glove.840B.300d.txt'
-
 def get_coefs(word, *arr):
     return word, np.asarray(arr, dtype='float32')
+
+## glove embeddings
+EMBEDDING_FILE = '../input/embeddings/glove.840B.300d/glove.840B.300d.txt'
 
 embeddings_index = dict(get_coefs(*o.split(" ")) for o in open(EMBEDDING_FILE, encoding='latin'))
 
@@ -148,12 +139,11 @@ for word, i in word_index.items():
 embedding_matrix2 = embedding_matrix
 del embedding_matrix,embeddings_index
 
-
+# concatenate two embedings, 300-> 600 features
 embedding_matrix = np.concatenate((embedding_matrix1,embedding_matrix2 ), axis=1)
 
 
-# biggest model
-
+# set up model
 inp = Input(shape=(maxlen,))
 x = Embedding(max_features, embed_size*2, weights=[embedding_matrix])(inp)
 x = SpatialDropout1D(0.3)(x)
@@ -168,18 +158,17 @@ model = Model(inputs=inp, outputs=predictions)
 model.compile(optimizer="adam", loss='binary_crossentropy', metrics=['accuracy'])
 print(model.summary())
 
-
+# train model
 model.fit(train_X, train_y, batch_size=512, epochs=2, validation_data=(val_X, val_y))
 
-pred_glove_val_y = model.predict([val_X], batch_size=1024, verbose=1)
+pred_com_val_y = model.predict([val_X], batch_size=1024, verbose=1)
 for thresh in np.arange(0.1, 0.501, 0.01):
     thresh = np.round(thresh, 2)
-    print("F1 score at threshold {0} is {1}".format(thresh, metrics.f1_score(val_y, (pred_glove_val_y>thresh).astype(int))))
+    print("F1 score at threshold {0} is {1}".format(thresh, metrics.f1_score(val_y, (pred_com_val_y>thresh).astype(int))))
 
+# prediction on test set
 pred_com_test_y = model.predict([test_X], batch_size=1024, verbose=1)
-
-pred_test_y = pred_com_test_y
-pred_test_y = (pred_test_y>0.33).astype(int)
+pred_test_y = (pred_com_test_y>0.33).astype(int)
 out_df = pd.DataFrame({"qid":test_df["qid"].values})
 out_df['prediction'] = pred_test_y
 out_df.to_csv("submission.csv", index=False)
