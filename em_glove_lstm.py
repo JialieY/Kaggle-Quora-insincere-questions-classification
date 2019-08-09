@@ -70,7 +70,7 @@ for word, i in word_index.items():
     if embedding_vector is not None: embedding_matrix[i] = embedding_vector
 
 
-# biggest model
+# LSTM model
 inp = Input(shape=(maxlen,))
 x = Embedding(max_features, embed_size, weights=[embedding_matrix])(inp)
 x = Bidirectional(CuDNNLSTM(64, return_sequences=True))(x)
