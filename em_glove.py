@@ -88,7 +88,7 @@ model.save('my_glove_model.h5')
 
 pred_glove_test_y = model.predict([test_X], batch_size=1024, verbose=1)
 
-pred_test_y = pred_gg_test_y
+pred_test_y = pred_glove_test_y
 pred_test_y = (pred_test_y>0.35).astype(int)
 out_df = pd.DataFrame({"qid":test_df["qid"].values})
 out_df['prediction'] = pred_test_y
