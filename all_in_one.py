@@ -15,13 +15,8 @@ for dirname, _, filenames in os.walk('/kaggle/input'):
 
 # Any results you write to the current directory are saved as output.
 
-import os
-import time
-import numpy as np # linear algebra
-import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
-
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.layers import Dense, Input, LSTM, GRU, Embedding, Dropout, Activation, CuDNNGRU, Conv1D, CuDNNLSTM
